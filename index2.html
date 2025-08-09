@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<title>Kalpli Puanlama</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #ffe6f0, #ffd6cc);
+  }
+  #rating {
+    user-select: none;
+  }
+  .heart {
+    cursor: pointer;
+    font-size: 3.5rem;
+    color: lightgray;
+    margin: 0 0.1rem;
+    transition: color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+  }
+  .heart.selected {
+    color: #e63946;
+  }
+
+  /* Sevinme animasyonu */
+  @keyframes sevinme {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3) rotate(10deg); }
+  }
+
+  /* Üzülme animasyonu */
+  @keyframes uzulme {
+    0%, 100% { transform: translateX(0); opacity: 1; }
+    50% { transform: translateX(5px) rotate(-10deg); opacity: 0.6; }
+  }
+
+  .sevinme {
+    animation: sevinme 0.6s ease;
+    color: #ff1a54 !important;
+  }
+
+  .uzulme {
+    animation: uzulme 0.6s ease;
+    color: #a83232 !important;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<h2>Duygusal Kalpli Puanlama</h2>
+<div id="rating">
+  <span class="heart" data-value="1">❤️</span>
+  <span class="heart" data-value="2">❤️</span>
+  <span class="heart" data-value="3">❤️</span>
+  <span class="heart" data-value="4">❤️</span>
+  <span class="heart" data-value="5">❤️</span>
+  <span class="heart" data-value="6">❤️</span>
+  <span class="heart" data-value="7">❤️</span>
+  <span class="heart" data-value="8">❤️</span>
+  <span class="heart" data-value="9">❤️</span>
+  <span class="heart" data-value="10">❤️</span>
+</div>
+
+<p>Puanınız: <span id="score">0</span></p>
+
+<script>
+  const hearts = document.querySelectorAll('.heart');
+  const score = document.getElementById('score');
+  let lastScore = 0;
+
+  hearts.forEach(heart => {
+    heart.addEventListener('click', () => {
+      const val = parseInt(heart.getAttribute('data-value'));
+      score.textContent = val;
+
+      hearts.forEach(h => {
+        const hv = parseInt(h.getAttribute('data-value'));
+        if(hv <= val) {
+          h.classList.add('selected');
+        } else {
+          h.classList.remove('selected');
+          h.classList.remove('sevinme', 'uzulme');
+        }
+        h.classList.remove('sevinme', 'uzulme');
+      });
+
+      if(val > lastScore) {
+        for(let i=1; i<=val; i++){
+          hearts[i-1].classList.add('sevinme');
+        }
+      } else if(val < lastScore) {
+        for(let i=val; i<lastScore; i++){
+          hearts[i].classList.add('uzulme');
+        }
+      }
+      lastScore = val;
+    });
+  });
+</script>
+
+</body>
+</html>
